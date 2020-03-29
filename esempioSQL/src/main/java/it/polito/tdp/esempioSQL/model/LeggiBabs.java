@@ -1,44 +1,27 @@
 package it.polito.tdp.esempioSQL.model;
 
-import java.sql.Statement;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import it.polito.tdp.esempioSQLdb.BabsDAO;
+import java.util.*;
 
 public class LeggiBabs {
 
 	public void run() {
-		String jdbcURL = "jdbc:mysql://localhost/babs?user=root&password=MuccaVolante98";
 		
-		try {
+		BabsDAO dao = new BabsDAO();
 		
-			Connection con = DriverManager.getConnection(jdbcURL);
-			
-			Statement st = con.createStatement();
-			
-			String sql = "SELECT NAME FROM STATION";
-			
-			ResultSet res = st.executeQuery(sql);
-			
-			while(res.next()) {
-				String  nomeStazione = res.getString("name");
-				
-				System.out.println(nomeStazione);
-			}
-			st.close();
-			
-			Statement st2 = con.createStatement();
-			// Non c'è bisogno che chiuda la connessione, devo chiudere lo statement prima di iniziarne un'altro
-			
-			con.close();
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
+		List<Station> tutte = dao.listStation();
+		
+		for(Station s : tutte) {
+			System.out.println(s.getName());
 		}
-		// FACTORY creazione oggetto di una classe senza sapere il tipo della classe => non posso usare new
-		// Uso allora un metodo fornito da un'altra classe che farà la new internamente e conoscerà il tipo di classe in questione
 		
+		System.out.println("---------------------------------------------------");
+		
+		List<Station> paloAlto = dao.listStationByLandmark("Palo Alto");
+		
+		for(Station p : paloAlto) {
+			System.out.println(p.getName());
+		}
 	}
 	public static void main(String args[]) {
 		LeggiBabs babs= new LeggiBabs();
